@@ -13,7 +13,7 @@ import asyncio
 
 from selenium.common.exceptions import TimeoutException,ElementClickInterceptedException,ElementNotInteractableException,StaleElementReferenceException,NoSuchElementException
 from termcolor import colored
-from database import Connect_db
+from database import ConnectDb,Art
 
 import colorama
 
@@ -22,7 +22,13 @@ colorama.init()
 
 class Bot:
     def __init__(self):
+        Art()
+
         opts = uc.ChromeOptions()
+
+        prefs = {"credentials_enable_service": False,
+                 "profile.password_manager_enabled": False}
+        opts.add_experimental_option("prefs", prefs)
 
         self.driver = uc.Chrome(options=opts, version_main=111, use_subprocess=True)
 
@@ -44,7 +50,7 @@ class Bot:
 
         password_input.send_keys(login_password)
 
-        print(colored(f" {time.ctime()} Entered password and email","green"))
+        print(colored(f"[ ] {time.ctime()} Entered password and email","green"))
         time.sleep(random.randrange(1, 4))
 
         submit_form = WebDriverWait(self.driver, 50).until(
@@ -59,12 +65,13 @@ class Bot:
 
 if __name__=="__main__":
 
-    db=Connect_db()
+    db=ConnectDb()
     credentials=db.check_credentials()
 
-    print(credentials)
+    email=credentials[0]
+    password=credentials[1]
 
-    #Bot().login_("kinginjack@gmail.com","jA9A?5mF+GQNL!K")
+    Bot().login_(email,password)
 
 
 

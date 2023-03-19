@@ -1,18 +1,23 @@
+import os
+import random
 import sqlite3
+import time
+
 from termcolor import colored
+import sys
 
-
-class Connect_db:
+class ConnectDb:
     def __init__(self):
         self.con = sqlite3.connect("linkedin.db")
         self.cur = self.con.cursor()
-       # check if table exists
+        ''' check if table exists '''
 
     def check_credentials(self):
         res = self.cur.execute("SELECT name FROM sqlite_master WHERE name='linkedin'")
         if res.fetchone():
-            # print(" table exists")
-             # check if there are any emails
+
+            '''check if there are any emails'''
+
             res_mail = self.cur.execute("SELECT email FROM linkedin")
             mail = res_mail.fetchone()
 
@@ -21,11 +26,11 @@ class Connect_db:
             pass_=res_password.fetchone()
 
             if mail and pass_:
-                print(pass_)
 
-                print('There is an email already')
+                return mail[0],pass_[0]
 
-            return mail[0],pass_[0]
+            else:
+                print(colored("Delete database and try again","red"))
 
         else:
             self.cur.execute("CREATE TABLE linkedin(email, password,connected_usernames)")
@@ -37,4 +42,29 @@ class Connect_db:
 
             print(colored('[ ] Saved linked in credentials', "yellow"))
 
+            return email,password
+
+
+class Art:
+    def __init__(self):
+        colors=["red","green","cyan",'yellow',"magenta"]
+
+        art = f'''  
+        ┬ ┌┐┬┌┌─┌┬┌┐┌  ┌┐┌─┌┬┐
+        │ ││├┴├┤ ││││  ├┴│ ││ 
+        ┴─┘└┴ └──┴┘└┘  └─└─┘┴ 
+           {time.ctime()}
+           < --------------- > code by jack
+           '''
+        for e in range(10):
+            color_picker = colors[random.randrange(len(colors) - 1)]
+            sys.stdout.write(colored(fr"{art}",f"{color_picker}"))
+            sys.stdout.flush()
+            time.sleep(0.5)
+            if e<9:
+                os.system("cls")
+
+
+
+        print("\n\n")
 
